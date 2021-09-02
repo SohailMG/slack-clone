@@ -7,11 +7,10 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-const ChatInput = ({channelName, channelId,chatRef}) => {
-    const [user] = useAuthState(auth)
+const ChatInput = ({ channelName, channelId, chatRef }) => {
+  const [user] = useAuthState(auth);
   const [inputMessage, setinputMessage] = useState("");
-  
-  
+
   const sendMessage = (e) => {
     e.preventDefault();
 
@@ -22,12 +21,11 @@ const ChatInput = ({channelName, channelId,chatRef}) => {
       message: inputMessage,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       user: user.displayName,
-      userImage:
-        user.photoURL,
+      userImage: user.photoURL,
     });
     chatRef?.current?.scrollIntoView({
-        behavior:"smooth"
-      })
+      behavior: "smooth",
+    });
     setinputMessage("");
   };
   return (
@@ -35,7 +33,7 @@ const ChatInput = ({channelName, channelId,chatRef}) => {
       <form>
         <input
           value={inputMessage}
-          placeholder={`Message #${channelName ? channelName : 'ROOM'}`}
+          placeholder={`Message #${channelName ? channelName : "ROOM"}`}
           onChange={(e) => {
             setinputMessage(e.target.value);
           }}

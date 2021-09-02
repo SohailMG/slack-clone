@@ -1,10 +1,12 @@
 import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { enterRoom } from "../features/appSlice";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 
 const SidebarOptions = ({ Icon, title, addChannelOption,id }) => {
+  const [user] = useAuthState(auth);
 
   const dispatch = useDispatch()
   
@@ -12,7 +14,7 @@ const SidebarOptions = ({ Icon, title, addChannelOption,id }) => {
   const addChannel = () => {
     const channelName = prompt("Please enter channel name ");
     if (channelName) {
-      db.collection("rooms").add({ name: channelName });
+      db.collection("rooms").add({ name: channelName,creator:user.displayName });
     }
   };
   const selectChannel = () => {

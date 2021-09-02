@@ -8,6 +8,7 @@ import ChatInput from "./ChatInput";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { db } from "../firebase";
 import Message from "./Message";
+import ChannelMembers from "./ChannelMembers";
 
 const Chat = () => {
   const chatRef = useRef(null);
@@ -23,6 +24,7 @@ const Chat = () => {
         .collection("messages")
         .orderBy("timestamp", "asc")
   );
+  
 
   useEffect(() => {
     chatRef?.current?.scrollIntoView({
@@ -39,13 +41,28 @@ const Chat = () => {
               <h4>
                 <strong>#{roomDetails?.data().name}</strong>
               </h4>
+
               <StarBorderIcon />
+              <small style={{ fontSize: "12px" }}>
+                Creator: {roomDetails?.data().creator}
+              </small>
             </HeaderLeft>
             <HeaderRight>
-              <p>
+              {/* <p>
                 <InfoOutlined />
                 Details
-              </p>
+              </p> */}
+              {[...new Set(roomMessages?.docs.slice(0,2))].map((doc) => {
+                const { user, userImage } = doc.data();
+                return (
+                  <ChannelMembers
+                    user={user}
+                    userImage={userImage}
+                    key={doc.id}
+                  />
+                );
+              })}
+              <p>{' '} + {roomMessages?.docs.length > 0 ? roomMessages?.docs.length : 'No Members'}</p>
             </HeaderRight>
           </Header>
 
@@ -110,6 +127,7 @@ const HeaderLeft = styled.div`
   }
 `;
 const HeaderRight = styled.div`
+  display: flex;
   > p {
     display: flex;
     align-items: center;
